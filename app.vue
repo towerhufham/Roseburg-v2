@@ -10,12 +10,11 @@
       </div>
     </div>
   </div>
-  <p>data: {{ data }}</p>
-  <p>pending: {{ pending }}</p>
-  <p>error: {{ error }}</p>
+  <p>data: {{ yam }}</p>
 </template>
 
 <script setup>
-const { data, pending, error, refresh } = await useFetch("./assets/data/ActionSpaces.yaml")
-
+import yam from "assets/data/ActionSpaces.yaml?raw"
+import { parse, stringify } from 'yaml'
+console.log(parse(yam))
 </script>
