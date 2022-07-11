@@ -10,4 +10,12 @@
       </div>
     </div>
   </div>
+  <p>data: {{ data }}</p>
+  <p>pending: {{ pending }}</p>
+  <p>error: {{ error }}</p>
 </template>
+
+<script setup>
+const { data, pending, error, refresh } = await useFetch("./assets/data/ActionSpaces.yaml")
+
+</script>
