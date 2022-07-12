@@ -24,7 +24,7 @@
 
 - name: Digging
   gain:
-    resource: Stone
+    - resource: Stone
 
 - name: Foraging
   randomGain:
@@ -112,3 +112,12 @@
       amount: 3
   gain:
     - resource: Mushroom
+
+- name: Breadmaking
+  cost:
+    - resource: Grain
+      amount: 3
+  gain:
+    - resource: Builds
+    - resource: Points
+      amount: 2

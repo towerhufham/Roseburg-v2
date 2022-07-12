@@ -50,9 +50,41 @@ export class ActionSpace {
         this.active = true;
         this.cost = cost;
         this.gain = gain;
-        this.randomGain = []
+        this.randomGain = randomGain;
     }
 }
+
+let allActions = [];
+// @ts-ignore
+import yam from "assets/data/ActionSpaces.yaml?raw"
+import { parse } from 'yaml'
+for (const space of parse(yam)) {
+    let cost: ResourceCost[] = [];
+    let gain: ResourceGain[] = [];
+    let randomGain: ResourceGain[] = [];
+    if (space.cost) {
+        for (const c of space.cost) {
+            const n = c.hasOwnProperty("amount") ? c.amount : 1;
+            cost.push({resource: c.resource, cost: n})
+        }
+    }
+    if (space.gain) {
+        for (const g of space.gain) {
+            const n = g.hasOwnProperty("amount") ? g.amount : 1;
+            gain.push({resource: g.resource, gain: n})
+        }
+    }
+    if (space.randomGain) {
+        for (const rg of space.randomGain) {
+            const n = rg.hasOwnProperty("amount") ? rg.amount : 1;
+            randomGain.push({resource: rg.resource, gain: n})
+        }
+    }
+    allActions.push(new ActionSpace(space.name, cost, gain, randomGain))
+}
+const startingActions = allActions.slice(0, 3);
+const blueprintActions = allActions.slice(3);
+
 
 export interface GameState {
     inventory: Record<Resource, number>,
@@ -77,62 +109,8 @@ export const useStore = defineStore("main", {
                 Rose: 0,
             },
             actionsTaken: [],
-            builtSpaces: [
-                new ActionSpace(
-                    "Building", 
-                    [
-                        {resource: Resource.Wood, cost: 2}, 
-                        {resource: Resource.Grain, cost: 1}
-                    ], 
-                    [
-                        {resource: Resource.Builds, gain: 1}
-                    ]
-                ),
-                new ActionSpace(
-                    "Woodcutting", 
-                    [], 
-                    [
-                        {resource: Resource.Wood, gain: 2}
-                    ]
-                ),
-                new ActionSpace(
-                    "Planting", 
-                    [], 
-                    [
-                        {resource: Resource.Grain, gain: 1}
-                    ]
-                ),
-            ],
-            blueprintSpaces: [
-                {
-                    name: "Farming", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Wood, cost: 1}
-                    ], gain: [
-                        {resource: Resource.Grain, gain: 2}
-                    ]
-                },
-                {
-                    name: "Digging", 
-                    active: true,
-                    cost: [], 
-                    gain: [
-                        {resource: Resource.Stone, gain: 1}
-                    ]
-                },
-                {
-                    name: "Foraging", 
-                    active: true,
-                    cost: [], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Wood, gain: 2},
-                        {resource: Resource.Grain, gain: 2},
-                        {resource: Resource.Stone, gain: 2},
-                    ]
-                }
-            ]
+            builtSpaces: startingActions,
+            blueprintSpaces: blueprintActions
         }
     },
     actions: {

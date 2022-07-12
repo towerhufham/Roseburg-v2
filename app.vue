@@ -10,11 +10,4 @@
       </div>
     </div>
   </div>
-  <p>data: {{ yam }}</p>
 </template>
-
-<script setup>
-import yam from "assets/data/ActionSpaces.yaml?raw"
-import { parse, stringify } from 'yaml'
-console.log(parse(yam))
-</script>
