@@ -1,0 +1,123 @@
+- name: Building
+  cost:
+    - resource: Wood
+      amount: 2
+    - resource: Grain
+  gain:
+    - resource: Builds
+
+- name: Woodcutting
+  gain:
+    - resource: Wood
+      amount: 2
+
+- name: Planting
+  gain:
+    - resource: Grain
+
+- name: Farming
+  cost:
+    - resource: Wood
+  gain:
+    - resource: Grain
+      amount: 2
+
+- name: Digging
+  gain:
+    - resource: Stone
+
+- name: Foraging
+  randomGain:
+    - resource: Wood
+      amount: 2
+    - resource: Grain
+      amount: 2
+    - resource: Stone
+      amount: 2
+
+- name: Stonework
+  cost:
+    - resource: Stone
+      amount: 2
+  gain:
+    - resource: Builds
+
+- name: Carving
+  cost:
+    - resource: Stone
+      amount: 2
+  gain:
+    - resource: Points
+
+- name: Fishing
+  cost:
+    - resource: Wood
+  randomGain:
+    - resource: Fish
+    - resource: Fish
+      amount: 2
+    - resource: Fish
+      amount: 3
+  
+- name: Cooking
+  cost:
+    - resource: Fish
+    - resource: Grain
+  gain:
+    - resource: Points
+      amount: 2
+
+- name: Pond
+  cost:
+    - resource: Fish
+      amount: 4
+  gain:
+    - resource: Points
+      amount: 2
+
+- name: Stew
+  cost:
+    - resource: Fish
+      amount: 2
+    - resource: Mushroom
+  gain:
+    - resource: Points
+      amount: 4
+
+- name: Rose Picking
+  randomGain:
+    - resource: Rose
+      amount: 0
+    - resource: Rose
+
+- name: Rose Viewing
+  cost:
+    - resource: Rose
+  gain:
+    - resource: Points
+      amount: 2
+
+- name: "'Shrooms"
+  cost: 
+    - resource: Mushroom
+  randomGain:
+    - resource: Points
+      amount: -1
+    - resource: Points
+      amount: 3
+
+- name: Composting
+  cost:
+    - resource: Wood
+      amount: 3
+  gain:
+    - resource: Mushroom
+
+- name: Breadmaking
+  cost:
+    - resource: Grain
+      amount: 3
+  gain:
+    - resource: Builds
+    - resource: Points
+      amount: 2

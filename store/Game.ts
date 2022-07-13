@@ -50,9 +50,41 @@ export class ActionSpace {
         this.active = true;
         this.cost = cost;
         this.gain = gain;
-        this.randomGain = []
+        this.randomGain = randomGain;
     }
 }
+
+let allActions = [];
+// @ts-ignore
+import yam from "assets/data/ActionSpaces.yaml?raw"
+import { parse } from 'yaml'
+for (const space of parse(yam)) {
+    let cost: ResourceCost[] = [];
+    let gain: ResourceGain[] = [];
+    let randomGain: ResourceGain[] = [];
+    if (space.cost) {
+        for (const c of space.cost) {
+            const n = c.hasOwnProperty("amount") ? c.amount : 1;
+            cost.push({resource: c.resource, cost: n})
+        }
+    }
+    if (space.gain) {
+        for (const g of space.gain) {
+            const n = g.hasOwnProperty("amount") ? g.amount : 1;
+            gain.push({resource: g.resource, gain: n})
+        }
+    }
+    if (space.randomGain) {
+        for (const rg of space.randomGain) {
+            const n = rg.hasOwnProperty("amount") ? rg.amount : 1;
+            randomGain.push({resource: rg.resource, gain: n})
+        }
+    }
+    allActions.push(new ActionSpace(space.name, cost, gain, randomGain))
+}
+const startingActions = allActions.slice(0, 3);
+const blueprintActions = allActions.slice(3);
+
 
 export interface GameState {
     inventory: Record<Resource, number>,
@@ -77,170 +109,8 @@ export const useStore = defineStore("main", {
                 Rose: 0,
             },
             actionsTaken: [],
-            builtSpaces: [
-                new ActionSpace(
-                    "Building", 
-                    [
-                        {resource: Resource.Wood, cost: 2}, 
-                        {resource: Resource.Grain, cost: 1}
-                    ], 
-                    [
-                        {resource: Resource.Builds, gain: 1}
-                    ]
-                ),
-                new ActionSpace(
-                    "Woodcutting", 
-                    [], 
-                    [
-                        {resource: Resource.Wood, gain: 2}
-                    ]
-                ),
-                new ActionSpace(
-                    "Planting", 
-                    [], 
-                    [
-                        {resource: Resource.Grain, gain: 1}
-                    ]
-                ),
-            ],
-            blueprintSpaces: [
-                {
-                    name: "Farming", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Wood, cost: 1}
-                    ], gain: [
-                        {resource: Resource.Grain, gain: 2}
-                    ]
-                },
-                {
-                    name: "Digging", 
-                    active: true,
-                    cost: [], 
-                    gain: [
-                        {resource: Resource.Stone, gain: 1}
-                    ]
-                },
-                {
-                    name: "Foraging", 
-                    active: true,
-                    cost: [], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Wood, gain: 2},
-                        {resource: Resource.Grain, gain: 2},
-                        {resource: Resource.Stone, gain: 2},
-                    ]
-                },
-                {
-                    name: "Stonework", 
-                    active: true,
-                    cost: [{resource: Resource.Stone, cost: 2}], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Builds, gain: 1},
-                    ]
-                },
-                {
-                    name: "Carving", 
-                    active: true,
-                    cost: [{resource: Resource.Stone, cost: 2}], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Points, gain: 1},
-                    ]
-                },
-                {
-                    name: "Fishing", 
-                    active: true,
-                    cost: [{resource: Resource.Wood, cost: 1}], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Fish, gain: 1},
-                        {resource: Resource.Fish, gain: 2},
-                        {resource: Resource.Fish, gain: 3},
-                    ]
-                },
-                {
-                    name: "Cooking", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Fish, cost: 1},
-                        {resource: Resource.Grain, cost: 1},
-                    ], 
-                    gain: [
-                        {resource: Resource.Points, gain: 2}
-                    ],
-                    randomGain: []
-                },
-                {
-                    name: "Pond", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Fish, cost: 4},
-                    ], 
-                    gain: [
-                        {resource: Resource.Points, gain: 2}
-                    ],
-                    randomGain: []
-                },
-                {
-                    name: "Stew", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Mushroom, cost: 1},
-                        {resource: Resource.Fish, cost: 1},
-                    ], 
-                    gain: [
-                        {resource: Resource.Points, gain: 4},
-                    ],
-                    randomGain: []
-                },
-                {
-                    name: "Rose Picking", 
-                    active: true,
-                    cost: [], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Rose, gain: 0},
-                        {resource: Resource.Rose, gain: 1},
-                    ]
-                },
-                {
-                    name: "Rose Viewing", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Rose, cost: 1},
-                    ], 
-                    gain: [
-                        {resource: Resource.Points, gain: 2},
-                    ],
-                    randomGain: []
-                },
-                {
-                    name: "'Shrooms", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Mushroom, cost: 1},
-                    ], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Points, gain: -1},
-                        {resource: Resource.Points, gain: 3}
-                    ]
-                },
-                {
-                    name: "Composting", 
-                    active: true,
-                    cost: [
-                        {resource: Resource.Wood, cost: 3},
-                    ], 
-                    gain: [],
-                    randomGain: [
-                        {resource: Resource.Mushroom, gain: 1},
-                    ]
-                },
-            ]
+            builtSpaces: startingActions,
+            blueprintSpaces: blueprintActions
         }
     },
     actions: {
