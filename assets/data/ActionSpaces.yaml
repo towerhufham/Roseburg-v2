@@ -1,4 +1,5 @@
 - name: Building
+  starting: true
   cost:
     - resource: Wood
       amount: 2
@@ -7,11 +8,13 @@
     - resource: Builds
 
 - name: Woodcutting
+  starting: true
   gain:
     - resource: Wood
       amount: 2
 
 - name: Planting
+  starting: true
   gain:
     - resource: Grain
 

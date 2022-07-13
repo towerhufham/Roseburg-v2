@@ -54,7 +54,8 @@ export class ActionSpace {
     }
 }
 
-let allActions = [];
+let startingActions = [];
+let blueprintActions = [];
 // @ts-ignore
 import yam from "assets/data/ActionSpaces.yaml?raw"
 import { parse } from 'yaml'
@@ -80,10 +81,18 @@ for (const space of parse(yam)) {
             randomGain.push({resource: rg.resource, gain: n})
         }
     }
-    allActions.push(new ActionSpace(space.name, cost, gain, randomGain))
+    const a = new ActionSpace(space.name, cost, gain, randomGain);
+    if (space.starting) {
+        startingActions.push(a)
+    } else {
+        blueprintActions.push(a)
+    }
 }
-const startingActions = allActions.slice(0, 3);
-const blueprintActions = allActions.slice(3);
+let allBlueprintActions = useShuffle(blueprintActions);
+let currentBlueprints = [];
+for (let i = 0; i < 8; i++) {
+    currentBlueprints.push(allBlueprintActions.pop())
+}
 
 
 export interface GameState {
@@ -110,7 +119,7 @@ export const useStore = defineStore("main", {
             },
             actionsTaken: [],
             builtSpaces: startingActions,
-            blueprintSpaces: blueprintActions
+            blueprintSpaces: currentBlueprints
         }
     },
     actions: {
