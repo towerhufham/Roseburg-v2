@@ -1,106 +1,9 @@
 import { defineStore } from "pinia";
+import { GameState, Resource, ActionSpace } from "./Models";
 
-export enum Resource {
-    Points = "Points",
-    Time = "Time",
-    Builds = "Builds",
-    Wood = "Wood",
-    Grain = "Grain",
-    Stone = "Stone",
-    Fish = "Fish",
-    Mushroom = "Mushroom",
-    Rose = "Rose"
-}
-
-export function getEmoji(resource: Resource): string {
-    const table: Record<Resource, string> = {
-        Points: "⚜️",
-        Time: "⌛",
-        Builds: "🔨",
-        Wood: "🪵",
-        Grain: "🌾",
-        Stone: "🪨",
-        Fish: "🐟",
-        Mushroom: "🍄",
-        Rose: "🌹",
-
-    }
-    return table[resource];
-}
-
-export interface ResourceCost {
-    resource: Resource,
-    cost: number
-}
-
-export interface ResourceGain {
-    resource: Resource,
-    gain: number
-}
-
-export class ActionSpace {
-    name: string;
-    active: boolean;
-    cost: ResourceCost[];
-    gain: ResourceGain[];
-    randomGain?: ResourceGain[];
-
-    constructor(name: string, cost: ResourceCost[], gain: ResourceGain[], randomGain?: ResourceGain[]) {
-        this.name = name;
-        this.active = true;
-        this.cost = cost;
-        this.gain = gain;
-        this.randomGain = randomGain;
-    }
-}
-
-let startingActions = [];
-let blueprintActions = [];
-// @ts-ignore
-import yam from "assets/data/ActionSpaces.yaml?raw"
-import { parse } from 'yaml'
-for (const space of parse(yam)) {
-    let cost: ResourceCost[] = [];
-    let gain: ResourceGain[] = [];
-    let randomGain: ResourceGain[] = [];
-    if (space.cost) {
-        for (const c of space.cost) {
-            const n = c.hasOwnProperty("amount") ? c.amount : 1;
-            cost.push({resource: c.resource, cost: n})
-        }
-    }
-    if (space.gain) {
-        for (const g of space.gain) {
-            const n = g.hasOwnProperty("amount") ? g.amount : 1;
-            gain.push({resource: g.resource, gain: n})
-        }
-    }
-    if (space.randomGain) {
-        for (const rg of space.randomGain) {
-            const n = rg.hasOwnProperty("amount") ? rg.amount : 1;
-            randomGain.push({resource: rg.resource, gain: n})
-        }
-    }
-    const a = new ActionSpace(space.name, cost, gain, randomGain);
-    if (space.starting) {
-        startingActions.push(a)
-    } else {
-        blueprintActions.push(a)
-    }
-}
-let allBlueprintActions = useShuffle(blueprintActions);
-let currentBlueprints = [];
-for (let i = 0; i < 8; i++) {
-    currentBlueprints.push(allBlueprintActions.pop())
-}
-
-
-export interface GameState {
-    inventory: Record<Resource, number>,
-    actionsTaken: ActionSpace[],
-    builtSpaces: ActionSpace[],
-    blueprintSpaces: ActionSpace[]
-}
+//get loaded actions
+import loaded from './ActionLoader';
+const { startingActions, startingBlueprints } = loaded;
 
 export const useStore = defineStore("main", {
     state: (): GameState => {
@@ -119,7 +22,7 @@ export const useStore = defineStore("main", {
             },
             actionsTaken: [],
             builtSpaces: startingActions,
-            blueprintSpaces: currentBlueprints
+            blueprintSpaces: startingBlueprints
         }
     },
     actions: {

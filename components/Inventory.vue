@@ -1,5 +1,6 @@
 <script setup>
-import { useStore, Resource, getEmoji } from "@/store/Game"
+import { useStore } from "@/store/Game"
+import { Resource, getEmoji } from "@/store/Models"
 const store = useStore()
 const visibleResources = computed(() => {
     //show only resources that we have at least one of; but always show time; and points is handled elsewhere

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ResourceCost, ResourceGain, getEmoji } from "@/store/Game"
+import { ResourceCost, ResourceGain, getEmoji } from "@/store/Models"
 const props = defineProps(['action']);
 function formatResourceCost(rc: ResourceCost): string {
     return `-${rc.cost}${getEmoji(rc.resource)}`

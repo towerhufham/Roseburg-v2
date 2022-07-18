@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useStore, ActionSpace as ActionSpaceClass } from "@/store/Game"
+import { useStore } from "@/store/Game"
+import { ActionSpace as ActionSpaceClass } from "@/store/Models"
 const store = useStore()
 const state = reactive({isBuilding: false});
 function tryStartBuilding() {
