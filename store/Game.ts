@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export enum Resource {
+export enum Resource { //should be a union type of strings
     Points = "Points",
     Time = "Time",
     Builds = "Builds",
@@ -12,7 +12,7 @@ export enum Resource {
     Rose = "Rose"
 }
 
-export function getEmoji(resource: Resource): string {
+export function getEmoji(resource: Resource): string { //can be a switch
     const table: Record<Resource, string> = {
         Points: "⚜️",
         Time: "⌛",
@@ -38,7 +38,7 @@ export interface ResourceGain {
     gain: number
 }
 
-export class ActionSpace {
+export class ActionSpace { //make type, not class
     name: string;
     active: boolean;
     cost: ResourceCost[];
@@ -56,13 +56,15 @@ export class ActionSpace {
 
 let startingActions = [];
 let blueprintActions = [];
+//can probably remove the @ts-ignore with "as" 
 // @ts-ignore
-import yam from "assets/data/ActionSpaces.yaml?raw"
+import yam from "assets/data/ActionSpaces.yaml?raw" //should make toml
 import { parse } from 'yaml'
 for (const space of parse(yam)) {
     let cost: ResourceCost[] = [];
     let gain: ResourceGain[] = [];
     let randomGain: ResourceGain[] = [];
+    //these three ifs are clunky
     if (space.cost) {
         for (const c of space.cost) {
             const n = c.hasOwnProperty("amount") ? c.amount : 1;
@@ -88,21 +90,21 @@ for (const space of parse(yam)) {
         blueprintActions.push(a)
     }
 }
-let allBlueprintActions = useShuffle(blueprintActions);
+let allBlueprintActions = useShuffle(blueprintActions); //probably can just use a util
 let currentBlueprints = [];
 for (let i = 0; i < 8; i++) {
-    currentBlueprints.push(allBlueprintActions.pop())
+    currentBlueprints.push(allBlueprintActions.pop()) //this can push undefineds probably, needs to count length
 }
 
 
 export interface GameState {
-    inventory: Record<Resource, number>,
+    inventory: Record<Resource, number>, //this should probably have a type alias like ResourceAmount
     actionsTaken: ActionSpace[],
     builtSpaces: ActionSpace[],
     blueprintSpaces: ActionSpace[]
 }
 
-export const useStore = defineStore("main", {
+export const useStore = defineStore("main", { //is this pinia??
     state: (): GameState => {
         //stochastic for now
         return {
@@ -123,7 +125,7 @@ export const useStore = defineStore("main", {
         }
     },
     actions: {
-        randInt(min: number, max: number) {
+        randInt(min: number, max: number) { //this should be util, or maybe from a seeded rng library
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
