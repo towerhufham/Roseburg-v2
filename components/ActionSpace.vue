@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import { ResourceCost, ResourceGain, getEmoji } from "@/store/Game"
-const props = defineProps(['action']);
-function formatResourceCost(rc: ResourceCost): string {
-    return `-${rc.cost}${getEmoji(rc.resource)}`
-}
-function formatResourceGain(rg: ResourceGain): string {
-    return `+${rg.gain}${getEmoji(rg.resource)}`
-}
-function formatRandomGain(rgs: ResourceGain[]): string {
-    let str = ""
-    for (const rg of rgs) {
-        str += `/${rg.gain >= 0 ? "+" : ""}${rg.gain}${getEmoji(rg.resource)}`
-    }
-    return str.substring(1);
-}
-const activeClasses = computed(() => {
-    return {
-        "bg-yellow-100": props.action.active,
-        "bg-slate-300": !props.action.active
-    }
-})
-</script>
-
 <template>
     <div v-bind:class="activeClasses" class="flex flex-col items-center border-2 border-yellow-500 rounded-lg shadow-md p-1 hover:bg-yellow-50">
       <h2 class="text-xl">{{ action.name }}</h2>
@@ -42,3 +18,27 @@ const activeClasses = computed(() => {
       </div>
     </div>
 </template>
+
+<script setup lang="ts">
+    import { ResourceCost, ResourceGain, getEmoji } from "@/store/Game"
+    const props = defineProps(['action']);
+    function formatResourceCost(rc: ResourceCost): string {
+        return `-${rc.cost}${getEmoji(rc.resource)}`
+    }
+    function formatResourceGain(rg: ResourceGain): string {
+        return `+${rg.gain}${getEmoji(rg.resource)}`
+    }
+    function formatRandomGain(rgs: ResourceGain[]): string {
+        let str = ""
+        for (const rg of rgs) {
+            str += `/${rg.gain >= 0 ? "+" : ""}${rg.gain}${getEmoji(rg.resource)}`
+        }
+        return str.substring(1);
+    }
+    const activeClasses = computed(() => {
+        return {
+            "bg-yellow-100": props.action.active,
+            "bg-slate-300": !props.action.active
+        }
+    })
+</script>
